@@ -23,6 +23,8 @@ def top_ten(subreddit):
     if response.status_code == 200:
         for post in response.json().get("data").get("children"):
             print(post.get("data").get("title"))
+    else:
+        print("None")
 
 
 if __name__ == "__main__":
