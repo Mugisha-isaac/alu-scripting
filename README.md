@@ -1,2 +1,2 @@
-#alu-scripting
-Building regular expressions using Oniguruma, the default library for Ruby.
+# alu-script
+Academic Assignments Only.
