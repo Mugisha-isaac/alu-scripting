@@ -13,14 +13,14 @@ def number_of_subscribers(subreddit):
     for a given subreddit
     """
     url = "https://www.reddit.com/r/{subreddit}/about.json".format(subreddit=subreddit)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-    }
+    headers = {"User-Agent": "custom-script/1.0"}
 
     try:
         response = requests.get(url, headers=headers, allow_redirects=False)
         if response.status_code == 200:
-            return response.json().get("data").get("subscribers")
+            return response.json().get("data", {}).get("subscribers", 0)
+        elif response.status_code == 404 or response.status_code == 301:
+            return 0
 
     except requests.RequestException:
         return 0
@@ -29,8 +29,8 @@ def number_of_subscribers(subreddit):
 
 
 if __name__ == "__main__":
-    if len(argv) > 1:
-        subreddit = argv[1]
-        print(number_of_subscribers(subreddit))
+    if len(argv) < 2:
+        print("Please pass an argument for the subreddit to search.")
     else:
-        print("No subreddit provided")
+        subreddit = argv[1]
+        print("{:d}".format(number_of_subscribers(subreddit)))
