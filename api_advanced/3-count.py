@@ -1,24 +1,43 @@
 #!/usr/bin/python3
 """
-Python script that   recursively  queries the Reddit API, 
-parses the title of all hot articles,
-and prints a sorted count of given keywords
-(case-insensitive, delimited by spaces.
+This Python script queries the Reddit API to recursively fetch and count
+the occurrence of given keywords in the titles of all hot articles from
+a specified subreddit. The count is case-insensitive and the results are
+printed in a sorted order by frequency and alphabetically.
+
+Usage:
+    python3 script.py <subreddit> "<keyword1> <keyword2> ... <keywordN>"
 """
-from collections import defaultdict
+
 import re
 import requests
+from collections import defaultdict
 from sys import argv
 
 
-def count_words(subreddit, word_list, hot_list=[], after=None):
+def count_words(subreddit, word_list, hot_list=None, after=None):
     """
-    Function that queries the Reddit API and returns a list containing the titles of all hot articles
+    Recursively queries the Reddit API to retrieve the titles of all hot articles
+    in the specified subreddit and counts the occurrence of each keyword.
+
+    Args:
+        subreddit (str): The name of the subreddit to query.
+        word_list (list): A list of keywords to count.
+        hot_list (list, optional): A list to store hot article titles. Defaults to None.
+        after (str, optional): The "after" parameter for pagination. Defaults to None.
+
+    Returns:
+        None: Prints the sorted word count of keywords.
     """
+    if hot_list is None:
+        hot_list = []
+
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     params = {"limit": 100, "after": after}
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/58.0.3029.110 Safari/537.3"
     }
 
     response = requests.get(url, headers=headers, params=params, allow_redirects=False)
@@ -48,7 +67,14 @@ def count_words(subreddit, word_list, hot_list=[], after=None):
 
 def process_titles(hot_list, word_list):
     """
-    Function that processes the titles of all hot articles
+    Processes the titles of hot articles to count the occurrences of specified keywords.
+
+    Args:
+        hot_list (list): A list of hot articles.
+        word_list (list): A list of keywords to count.
+
+    Returns:
+        None: Prints the sorted word count of keywords.
     """
     word_count = defaultdict(int)
     word_set = {word.lower() for word in word_list}
@@ -68,6 +94,11 @@ def process_titles(hot_list, word_list):
 
 
 if __name__ == "__main__":
-    subreddit = argv[1]
-    word_list = [x for x in argv[2].split()]
-    count_words(subreddit, word_list)
+    if len(argv) < 3:
+        print(
+            'Usage: python3 script.py <subreddit> "<keyword1> <keyword2> ... <keywordN>"'
+        )
+    else:
+        subreddit = argv[1]
+        word_list = argv[2].split()
+        count_words(subreddit, word_list)
