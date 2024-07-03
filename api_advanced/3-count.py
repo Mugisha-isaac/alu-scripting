@@ -1,13 +1,5 @@
 #!/usr/bin/python3
-"""
-This Python script queries the Reddit API to recursively fetch and count
-the occurrence of given keywords in the titles of all hot articles from
-a specified subreddit. The count is case-insensitive and the results are
-printed in a sorted order by frequency and alphabetically.
-
-Usage:
-    python3 script.py <subreddit> "<keyword1> <keyword2> ... <keywordN>"
-"""
+""" 3-count.py """
 
 import re
 import requests

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-Python script that returns the number of subscribers
-    for a given subreddit
+function that queries the 'Reddit API' and returns the number of subscribers
 """
 import requests
 from sys import argv
@@ -9,16 +8,16 @@ from sys import argv
 
 def number_of_subscribers(subreddit):
     """
-    Function that queries the Reddit API and returns the number of subscribers
-    for a given subreddit
+    number of subscribers
     """
     url = "https://www.reddit.com/r/{subreddit}/about.json".format(subreddit=subreddit)
-    headers = {"User-Agent": "custom-script/1.0"}
+    headers = {"User-Agent": "Mozilla/5.0"}
 
     try:
         response = requests.get(url, headers=headers, allow_redirects=False)
         if response.status_code == 200:
-            return response.json().get("data", {}).get("subscribers", 0)
+            data = response.json()
+            return data["data"]["subscribers"]
         elif response.status_code == 404 or response.status_code == 301:
             return 0
 
