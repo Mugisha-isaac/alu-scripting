@@ -5,13 +5,16 @@ parses the title of all hot articles,
 and prints a sorted count of given keywords
 (case-insensitive, delimited by spaces.
 """
-import requests
 from collections import defaultdict
 import re
+import requests
 from sys import argv
 
 
 def count_words(subreddit, word_list, hot_list=[], after=None):
+    """
+    Function that queries the Reddit API and returns a list containing the titles of all hot articles
+    """
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     params = {"limit": 100, "after": after}
     headers = {
@@ -44,6 +47,9 @@ def count_words(subreddit, word_list, hot_list=[], after=None):
 
 
 def process_titles(hot_list, word_list):
+    """
+    Function that processes the titles of all hot articles
+    """
     word_count = defaultdict(int)
     word_set = {word.lower() for word in word_list}
 
